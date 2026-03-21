@@ -26,19 +26,20 @@ echo "[install] Installing frontend dependencies..."
 echo "[install] Installing Playwright browsers (chromium)..."
 (cd web && pnpm exec playwright install --with-deps chromium)
 
-# --- Go dependencies ---
-if ! command -v go &>/dev/null; then
-  echo "[install] ERROR: Go is not installed. Install Go 1.22+ and re-run."
+# --- Ruby / Rails (control-plane) ---
+if ! command -v ruby &>/dev/null; then
+  echo "[install] ERROR: Ruby is not installed. Install Ruby 3.3+ and re-run."
   exit 1
 fi
 
-echo "[install] Go version: $(go version)"
-echo "[install] Downloading Go module dependencies..."
-(cd control-plane && go mod download)
+echo "[install] Ruby version: $(ruby --version)"
+echo "[install] Installing Rails API dependencies..."
+(cd rails-api && bundle install)
 
 echo "[install] Installation complete."
 echo ""
-echo "  Start all services:  docker compose up"
-echo "  Run healthcheck:     bash deploy/healthcheck.sh"
-echo "  Frontend tests:      cd web && pnpm test"
-echo "  Go tests:            cd control-plane && go test ./..."
+echo "  Start all services:    docker compose up"
+echo "  Run healthcheck:       bash deploy/healthcheck.sh"
+echo "  Frontend tests:        cd web && pnpm test"
+echo "  Frontend e2e tests:    cd web && pnpm test:e2e"
+echo "  Rails tests:           cd rails-api && bundle exec rspec"

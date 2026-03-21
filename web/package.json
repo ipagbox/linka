@@ -15,16 +15,20 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "matrix-js-sdk": "41.2.0-rc.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.14.1",

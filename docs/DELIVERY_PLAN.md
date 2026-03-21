@@ -6,7 +6,7 @@ This document defines the execution stages of the Linka project and acts as the 
 
 ## Current stage
 
-Stage 2 — Invite domain
+Stage 3 — Onboarding and account bootstrap
 
 ---
 
@@ -14,6 +14,7 @@ Stage 2 — Invite domain
 
 - Stage 0 — Foundation
 - Stage 1 — Runtime bootstrap
+- Stage 2 — Invite domain
 
 ---
 
@@ -164,7 +165,7 @@ Future-stage work discovered:
 
 ## Stage 3 — Onboarding and account bootstrap
 
-Status: pending
+Status: current
 
 Goal:
 Allow user to join system via invite and create account.
