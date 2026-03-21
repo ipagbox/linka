@@ -6,13 +6,14 @@ This document defines the execution stages of the Linka project and acts as the 
 
 ## Current stage
 
-Stage 1 — Runtime bootstrap
+Stage 2 — Invite domain
 
 ---
 
 ## Completed stages
 
 - Stage 0 — Foundation
+- Stage 1 — Runtime bootstrap
 
 ---
 
@@ -68,7 +69,7 @@ Artifacts:
 
 ## Stage 1 — Runtime bootstrap
 
-Status: current
+Status: done
 
 Goal:
 Make the system bootable and testable in both local and CI environments.
