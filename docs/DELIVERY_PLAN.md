@@ -124,27 +124,41 @@ Regression guard:
 
 ## Stage 2 — Invite domain
 
-Status: pending
+Status: done
 
 Goal:
-Introduce invite-only access control.
+Introduce invite-only access control via a Ruby on Rails control-plane API.
 
 In scope:
-- invite token generation
-- invite validation
-- invite consumption
-- one-time usage enforcement
+- invite token generation (secure random, digest-stored)
+- invite validation (expired / exhausted / consumed / invalid states)
+- invite consumption (single-use and multi-use)
+- one-time and limited multi-use enforcement
+- versioned JSON API: POST/GET/consume under /api/v1/invites
+- Rails model, migration, request specs, model specs
+
+Architecture note:
+The control-plane is implemented in Ruby on Rails (not Go).
+The rails-api/ directory is the canonical backend.
+The Go control-plane/ is superseded; its health-check behavior is preserved in Rails.
 
 Out of scope:
 - UI onboarding
+- Matrix account creation
 - messaging
 - session UX
 
 Definition of done:
-- valid invite can be created and validated
-- invite cannot be reused after consumption
-- invalid/expired tokens are rejected
-- unit and integration tests cover edge cases
+- valid invite can be created and validated ✓
+- invite cannot be reused after consumption ✓
+- multi-use invites track and enforce max_uses ✓
+- invalid/expired tokens are rejected ✓
+- token digest stored; raw token returned once at creation ✓
+- unit and request specs cover all required cases ✓
+
+Future-stage work discovered:
+- Stage 3: Invite route in PWA, onboarding screen, Matrix account creation
+- Stage 3: Authentication for invite creation endpoint (currently open)
 
 ---
 

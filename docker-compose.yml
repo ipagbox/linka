@@ -34,11 +34,14 @@ services:
 
   control-plane:
     build:
-      context: ./control-plane
+      context: ./rails-api
       dockerfile: Dockerfile
     environment:
       PORT: "8080"
       DATABASE_URL: postgres://linka:linka_dev_password@postgres:5432/linka_development
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+      SECRET_KEY_BASE: changeme_generate_a_real_secret_for_production
     ports:
       - "8080:8080"
     depends_on:
@@ -49,7 +52,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
 
   web:
     build:
