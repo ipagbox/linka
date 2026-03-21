@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+web/node_modules/
+
+# Build output
+dist/
+web/dist/
+control-plane/bin/
+control-plane/control-plane
+
+# Go build cache
+*.test
+*.out
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+web/playwright-report/
+web/test-results/
+web/.playwright/
+
+# Vitest
+web/coverage/
+
+# Docker volumes (local)
+synapse/data/
+postgres/data/
+
+# pnpm
+web/.pnpm-store/
+
+# Go coverage
+*.coverprofile
