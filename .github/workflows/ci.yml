@@ -59,22 +59,50 @@ jobs:
         run: pnpm test:e2e
 
   control-plane:
-    name: Control Plane
+    name: Control Plane (Rails)
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: control-plane
+        working-directory: rails-api
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: linka_test
+          POSTGRES_USER: linka
+          POSTGRES_PASSWORD: linka_dev_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://linka:linka_dev_password@localhost:5432/linka_test
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v5
+      - uses: ruby/setup-ruby@v1
         with:
-          go-version: "1.24"
-          cache: true
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: rails-api
 
-      - name: Vet
-        run: go vet ./...
+      - name: Set up database
+        run: bundle exec rails db:create db:migrate
 
-      - name: Test
-        run: go test -race -count=1 ./...
+      - name: Run specs
+        run: bundle exec rspec --format progress --format json --out tmp/rspec_results.json
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rspec-results
+          path: rails-api/tmp/rspec_results.json
+          if-no-files-found: ignore

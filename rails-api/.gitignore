@@ -1,0 +1,26 @@
+# Rails
+/.bundle
+/log/*.log
+/tmp
+/storage
+/public/uploads
+
+# Secrets - never commit these
+/config/master.key
+/config/credentials/*.key
+
+# Test artifacts
+/coverage/
+/spec/tmp/
+
+# Database
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Bundler
+vendor/bundle
+.bundle/
+
+# Node (if any)
+node_modules/
+rails-api/.github/

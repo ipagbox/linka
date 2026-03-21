@@ -45,3 +45,11 @@ web/.pnpm-store/
 
 # Go coverage
 *.coverprofile
+
+# Rails
+rails-api/log/*.log
+rails-api/tmp/
+rails-api/config/master.key
+rails-api/config/credentials/*.key
+rails-api/.bundle/
+rails-api/vendor/bundle/
