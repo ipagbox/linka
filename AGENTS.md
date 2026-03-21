@@ -9,7 +9,7 @@ Linka is a self-hosted, invite-only PWA messenger built on Matrix/Synapse.
 ## Architecture
 
 - `web/` — React + TypeScript + Vite PWA frontend
-- `control-plane/` — Go HTTP service (invite management, control APIs)
+- `rails-api/` — Ruby on Rails HTTP service (invite management, control APIs)
 - `deploy/` — deployment and operations scripts
 - `docs/` — project documentation and delivery plan
 
@@ -31,7 +31,7 @@ Do not implement future-stage features early.
 
 - Frontend unit tests: `pnpm test` (Vitest)
 - Frontend e2e tests: `pnpm test:e2e` (Playwright)
-- Control-plane tests: `go test ./...`
+- Control-plane tests: `bundle exec rails test`
 - Playwright browsers must be installed before running e2e tests
 
 ## Dependency Policy
@@ -47,7 +47,7 @@ CI is the source of truth. All checks must pass:
 - typecheck
 - unit tests
 - e2e tests
-- go tests
+- rails tests
 
 ## Commit Messages
 
