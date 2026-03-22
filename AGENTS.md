@@ -28,6 +28,9 @@ Linka is a self-hosted, invite-only PWA messenger built on Matrix/Synapse.
 ## Architecture
 
 - `web/` — React + TypeScript + Vite PWA frontend
+  - Routes: `/invite/:token` (onboarding), `/` (app shell or placeholder)
+  - Uses matrix-js-sdk for Matrix account creation
+  - Session persisted in localStorage
 - `rails-api/` — Ruby on Rails control-plane (invite domain, onboarding, access control)
 - `control-plane/` — legacy Go directory, superseded by the Ruby on Rails control-plane; health-check behaviour preserved in Rails
 - `deploy/` — deployment and operations scripts

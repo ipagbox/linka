@@ -6,7 +6,7 @@ This document defines the execution stages of the Linka project and acts as the 
 
 ## Current stage
 
-Stage 2 — Invite domain
+Stage 3 — Onboarding and account bootstrap
 
 ---
 
@@ -14,6 +14,7 @@ Stage 2 — Invite domain
 
 - Stage 0 — Foundation
 - Stage 1 — Runtime bootstrap
+- Stage 2 — Invite domain
 
 ---
 
@@ -164,7 +165,7 @@ Future-stage work discovered:
 
 ## Stage 3 — Onboarding and account bootstrap
 
-Status: pending
+Status: done
 
 Goal:
 Allow a user to join the system via an invite link and create a Matrix account.
@@ -185,12 +186,25 @@ Out of scope:
 - push notifications
 
 Definition of done:
-- valid invite link opens onboarding screen
-- invalid/expired/consumed invite shows stable error state
-- user enters display name and account is created in Matrix
-- invite is marked as consumed in control-plane
-- session persists across browser reload
-- logout clears session completely
+- valid invite link opens onboarding screen ✓
+- invalid/expired/consumed invite shows stable error state ✓
+- user enters display name and account is created in Matrix ✓
+- invite is marked as consumed in control-plane ✓
+- session persists across browser reload ✓
+- logout clears session completely ✓
+
+Implementation notes:
+- Matrix registration uses matrix-js-sdk with UIAA (m.login.dummy flow)
+- Homeserver URL configured via VITE_MATRIX_HOMESERVER (default: http://localhost:8008)
+- Control-plane URL configured via VITE_CONTROL_PLANE_URL (default: http://localhost:8080)
+- Username auto-generated from display name + random suffix; password generated and not stored
+- Session stored as JSON in localStorage under key 'linka_session'
+- All tests mock matrix-js-sdk and HTTP endpoints; no real Synapse or control-plane required
+
+Future-stage work discovered:
+- Stage 4: Session validation on restore (check if Matrix token still valid)
+- Stage 4: Handle token expiry and re-authentication
+- Stage 8: Rate limiting on invite endpoints; auth for invite creation endpoint
 
 Regression guard:
 - all Stage 2 API specs must pass

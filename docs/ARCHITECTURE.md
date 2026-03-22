@@ -49,7 +49,9 @@ The control plane does **not** process or store message content. It never touche
 - React 18 + TypeScript + Vite
 - Progressive Web App (PWA)
 - Communicates with the control-plane over HTTP JSON API
-- Will use Matrix SDK for messaging (future stage)
+- Uses matrix-js-sdk for Matrix account creation (Stage 3+)
+- Routes: `/invite/:token` (onboarding), `/` (app shell or placeholder)
+- Session stored in localStorage; validated structurally on restore
 
 ### Control Plane (rails-api/)
 
@@ -71,7 +73,7 @@ The control plane does **not** process or store message content. It never touche
 - Used by the Rails control-plane only
 - Synapse manages its own data directory separately
 
-## API Endpoints (Stage 2)
+## API Endpoints (Stages 2–3)
 
 ```
 GET  /health                         — health check (backward compat)
@@ -97,10 +99,24 @@ POST /api/v1/invites/:token/consume  — consume invite
 | Control Plane | 8080 |
 | Web (Nginx)   | 3000 |
 
+## Session Design (Stage 3)
+
+- Session stored client-side in localStorage as JSON
+- Fields: userId, accessToken, deviceId, homeserver, displayName
+- Validated structurally on every load (wrong shape → cleared)
+- Persists across reload; cleared on logout
+- Matrix account created via matrix-js-sdk during onboarding
+
+## Environment Variables (Frontend)
+
+| Variable | Default | Purpose |
+|---|---|---|
+| VITE_CONTROL_PLANE_URL | http://localhost:8080 | Rails control-plane base URL |
+| VITE_MATRIX_HOMESERVER | http://localhost:8008 | Synapse homeserver base URL |
+
 ## Stage Discipline
 
 The control-plane must not:
 - Process or store message content
 - Implement messaging transport
-- Create Matrix accounts (until Stage 3)
 - Implement session UX (until Stage 5)
