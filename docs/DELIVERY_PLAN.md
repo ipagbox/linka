@@ -140,7 +140,7 @@ In scope:
 Architecture note:
 The control-plane is implemented in Ruby on Rails (not Go).
 The rails-api/ directory is the canonical backend.
-The Go control-plane/ is superseded; its health-check behavior is preserved in Rails.
+The legacy Go control-plane/ directory is superseded by the Ruby on Rails control-plane; its health-check behavior is preserved in Rails.
 
 Out of scope:
 - UI onboarding

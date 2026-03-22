@@ -40,7 +40,7 @@ What risk or dependency this stage resolves.
 
 ## Constraints
 
-- follow architecture constraints (Matrix, Synapse, Go control-plane, PWA)
+- follow architecture constraints (Matrix, Synapse, Ruby on Rails control-plane, PWA)
 - no custom crypto
 - no fake production-ready claims
 - no reliance on push success
