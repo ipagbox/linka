@@ -15,11 +15,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "matrix-js-sdk": "41.2.0-rc.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
