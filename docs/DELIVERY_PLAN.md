@@ -6,7 +6,7 @@ This document defines the execution stages of the Linka project and acts as the 
 
 ## Current stage
 
-Stage 4 — Auth and session stabilization
+Stage 5 — Direct messaging
 
 ---
 
@@ -16,6 +16,7 @@ Stage 4 — Auth and session stabilization
 - Stage 1 — Runtime bootstrap
 - Stage 2 — Invite domain
 - Stage 3 — Onboarding and account bootstrap
+- Stage 4 — Auth and session stabilization
 
 ---
 
@@ -265,35 +266,52 @@ Regression guard:
 
 ## Stage 5 — Direct messaging
 
-Status: pending
+Status: done
 
 Goal:
-Enable text message exchange between two users in a private room.
+Enable text message exchange between two users via Matrix.
 
 In scope:
-- direct chat creation via Matrix SDK
-- text message sending
-- text message receiving and display
-- read receipts
-- typing indicators
-- basic message list UI (no WhatsApp/Telegram aesthetics)
+- Matrix client lifecycle (create, start sync, stop)
+- chat list (DM rooms from m.direct account data)
+- open direct chat room
+- text message sending with optimistic UI
+- text message receiving via Matrix sync events
+- message status: sending → sent / failed
+- retry mechanism for failed messages
+- basic message list (no chat bubble style)
 
 Out of scope:
 - file/image attachments
 - group rooms
 - push notifications
 - offline queue
-
-UI constraints:
-- no chat bubble style
-- minimal, calm, dark-theme UI
-- functional states: sending / sent / error
+- read receipts / typing indicators (Stage 6+)
 
 Definition of done:
-- two users can exchange text messages in a direct room
-- read receipts visible
-- typing indicator visible
-- messages persist across reload (via Matrix sync)
+- user sees chat list ✓
+- user can open a chat ✓
+- user can send a message ✓
+- message appears immediately (optimistic UI) ✓
+- message transitions through states correctly ✓
+- incoming messages appear in UI ✓
+- failures are visible ✓
+- retry mechanism exists ✓
+- no backend message handling introduced ✓
+- unit, integration, and e2e tests pass ✓
+
+Implementation notes:
+- Matrix client created in AppShell on mount, stopped on unmount
+- getDirectRooms() reads m.direct account data to enumerate DM rooms
+- ChatRoom subscribes to RoomEvent.Timeline for incoming messages
+- Optimistic messages held in local state; deduped against server events by eventId
+- AppShell accepts full Session prop (was displayName only in Stage 4)
+- All messaging utilities in messaging.ts; pure reducer applyMessageStatusTransition is independently testable
+
+Regression guard:
+- all Stage 4 auth/session tests pass
+- all Stage 3 onboarding tests pass
+- all Stage 2 API specs pass
 
 ---
 

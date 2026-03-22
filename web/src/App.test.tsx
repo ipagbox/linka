@@ -8,8 +8,8 @@ vi.mock('./InvitePage', () => ({
   default: ({ token }: { token: string }) => <div data-testid="invite-page">InvitePage:{token}</div>,
 }))
 vi.mock('./AppShell', () => ({
-  default: ({ displayName }: { displayName: string }) => (
-    <div data-testid="app-shell">AppShell:{displayName}</div>
+  default: ({ session }: { session: { displayName: string } }) => (
+    <div data-testid="app-shell">AppShell:{session.displayName}</div>
   ),
 }))
 vi.mock('./matrix', () => ({

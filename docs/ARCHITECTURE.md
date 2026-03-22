@@ -123,9 +123,37 @@ POST /api/v1/invites/:token/consume  — consume invite
 | VITE_CONTROL_PLANE_URL | http://localhost:8080 | Rails control-plane base URL |
 | VITE_MATRIX_HOMESERVER | http://localhost:8008 | Synapse homeserver base URL |
 
+## Direct Messaging Flow (Stage 5)
+
+```
+User action: open app shell
+  → AppShell creates MatrixClient (createMatrixClient)
+  → client.startClient() begins sync loop
+  → ClientEvent.Sync 'PREPARED' → getDirectRooms() → ChatList rendered
+
+User action: click room
+  → selectedRoomId set → ChatRoom rendered
+  → getRoomMessages() reads current timeline
+  → RoomEvent.Timeline listener registered
+
+User action: type message + send
+  → optimistic Message{status:'sending'} added to local state
+  → sendMatrixMessage() → client.sendTextMessage()
+  → success: status → 'sent', eventId stored
+  → failure: status → 'failed', retry button shown
+
+Incoming message (from peer):
+  → Matrix sync delivers event
+  → RoomEvent.Timeline fires
+  → getRoomMessages() refreshes serverMessages
+  → optimistic message deduped by eventId
+```
+
+Deduplication: local optimistic messages are removed from view once their eventId
+appears in serverMessages (delivered by sync).
+
 ## Stage Discipline
 
 The control-plane must not:
 - Process or store message content
 - Implement messaging transport
-- Implement session UX (until Stage 5)

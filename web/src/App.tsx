@@ -62,7 +62,7 @@ function App() {
   }
 
   if (bootState.status === 'authenticated') {
-    return <AppShell displayName={bootState.session.displayName} />
+    return <AppShell session={bootState.session} />
   }
 
   return (
