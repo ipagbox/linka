@@ -1,4 +1,5 @@
 import { createClient, MatrixError } from 'matrix-js-sdk'
+import type { Session } from './session'
 
 export interface MatrixRegistrationResult {
   userId: string
@@ -71,6 +72,33 @@ export function generateUsername(displayName: string): string {
     .slice(0, 16)
   const suffix = Math.random().toString(36).slice(2, 7)
   return (base || 'user') + '_' + suffix
+}
+
+/**
+ * Validate a stored session by checking whether the access token is still accepted
+ * by the homeserver.
+ *
+ * Returns true if the token is valid.
+ * Returns false if the homeserver responds 401 (token invalid or expired).
+ * Throws for any other error (network failure, unexpected response) so the caller
+ * can decide how to handle it (e.g. proceed optimistically).
+ */
+export async function validateMatrixSession(session: Session): Promise<boolean> {
+  const client = createClient({
+    baseUrl: session.homeserver,
+    userId: session.userId,
+    accessToken: session.accessToken,
+    deviceId: session.deviceId,
+  })
+  try {
+    await client.whoami()
+    return true
+  } catch (e) {
+    if (e instanceof MatrixError && e.httpStatus === 401) {
+      return false
+    }
+    throw e
+  }
 }
 
 /** Generate a random password (access token is used for session; password not stored). */

@@ -148,6 +148,7 @@ test('session persists after reload', async ({ page }) => {
     localStorage.setItem(
       'linka_session',
       JSON.stringify({
+        version: 1,
         userId: '@alice:localhost',
         accessToken: 'syt_abc',
         deviceId: 'DEVICE1',
@@ -167,6 +168,7 @@ test('logout clears session and returns to placeholder', async ({ page }) => {
     localStorage.setItem(
       'linka_session',
       JSON.stringify({
+        version: 1,
         userId: '@alice:localhost',
         accessToken: 'syt_abc',
         deviceId: 'DEVICE1',

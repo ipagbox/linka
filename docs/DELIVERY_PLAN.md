@@ -6,7 +6,7 @@ This document defines the execution stages of the Linka project and acts as the 
 
 ## Current stage
 
-Stage 3 — Onboarding and account bootstrap
+Stage 4 — Auth and session stabilization
 
 ---
 
@@ -15,6 +15,7 @@ Stage 3 — Onboarding and account bootstrap
 - Stage 0 — Foundation
 - Stage 1 — Runtime bootstrap
 - Stage 2 — Invite domain
+- Stage 3 — Onboarding and account bootstrap
 
 ---
 
@@ -212,29 +213,53 @@ Regression guard:
 
 ---
 
-## Stage 4 — Auth and session restoration
+## Stage 4 — Auth and session stabilization
 
-Status: pending
+Status: done
 
 Goal:
-Make sessions robust: restore on reload, handle expiry, provide clean logout.
+Stabilize authentication and session handling for predictable, reliable app boot.
 
 In scope:
-- session restoration from browser storage on app load
-- detection and handling of invalid/expired Matrix session
-- logout flow: clear session, clear Matrix client state
-- app shell: minimal navigation, chat list placeholder
+- versioned session structure (SESSION_VERSION field)
+- session validation on app boot (structure + Matrix token check)
+- async boot flow with deterministic loading → authenticated/unauthenticated states
+- invalid/corrupted session safely discarded and cleared
+- expired Matrix token (401) triggers clean logout
+- network errors during validation handled optimistically (keep session)
+- logout flow: clear session storage, reset app state, redirect to placeholder
+- unit tests: session validation, version checks, boot state transitions
+- integration tests: invalid token clears session, network error is optimistic
+- e2e tests: corrupted session recovery, session persistence after reload, logout
 
 Out of scope:
-- actual message sending/receiving
+- chat UI or messaging
 - push notifications
 - groups or attachments
+- advanced token refresh flows
 
 Definition of done:
-- app restores session on reload without re-login
-- invalid session triggers clean re-onboarding or error
-- logout clears all local state
-- app shell renders with navigation
+- session stored after onboarding with version field ✓
+- session restores correctly after reload ✓
+- invalid session (wrong version, bad JSON, missing fields) discarded safely ✓
+- expired Matrix token (401) clears session and redirects ✓
+- network error during validation proceeds optimistically ✓
+- logout fully clears session and resets state ✓
+- app boot logic is deterministic (loading → authenticated/unauthenticated) ✓
+- unit, integration, and e2e tests pass ✓
+
+Implementation notes:
+- Session now includes `version: number` field (SESSION_VERSION = 1)
+- saveSession() automatically injects current version; callers do not specify it
+- loadSession() rejects any session with missing or mismatched version
+- App boot: useEffect triggers async validation; shows "Loading…" until resolved
+- validateMatrixSession() calls client.whoami(); returns false on 401, throws on network errors
+- App.tsx handles the three outcomes: valid → AppShell, invalid → unauthenticated, error → optimistic AppShell
+
+Regression guard:
+- all Stage 3 onboarding tests must pass
+- all Stage 2 API specs must pass
+- no secrets required for local execution
 
 ---
 

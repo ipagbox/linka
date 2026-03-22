@@ -1,4 +1,7 @@
+export const SESSION_VERSION = 1
+
 export interface Session {
+  version: number
   userId: string
   accessToken: string
   deviceId: string
@@ -8,8 +11,9 @@ export interface Session {
 
 const SESSION_KEY = 'linka_session'
 
-export function saveSession(session: Session): void {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+export function saveSession(session: Omit<Session, 'version'>): void {
+  const full: Session = { version: SESSION_VERSION, ...session }
+  localStorage.setItem(SESSION_KEY, JSON.stringify(full))
 }
 
 export function loadSession(): Session | null {
@@ -20,6 +24,9 @@ export function loadSession(): Session | null {
     if (
       data !== null &&
       typeof data === 'object' &&
+      'version' in data &&
+      typeof (data as Record<string, unknown>).version === 'number' &&
+      (data as Record<string, unknown>).version === SESSION_VERSION &&
       'userId' in data &&
       typeof (data as Record<string, unknown>).userId === 'string' &&
       'accessToken' in data &&

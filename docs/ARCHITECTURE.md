@@ -99,13 +99,22 @@ POST /api/v1/invites/:token/consume  — consume invite
 | Control Plane | 8080 |
 | Web (Nginx)   | 3000 |
 
-## Session Design (Stage 3)
+## Session Design (Stage 4)
 
-- Session stored client-side in localStorage as JSON
-- Fields: userId, accessToken, deviceId, homeserver, displayName
-- Validated structurally on every load (wrong shape → cleared)
+- Session stored client-side in localStorage as JSON under key `linka_session`
+- Fields: version, userId, accessToken, deviceId, homeserver, displayName
+- `version` field enables forward-compatible format changes; current value: SESSION_VERSION = 1
+- Validation on load: structural check (all fields, correct types) + version match
+- Invalid/corrupted/mismatched-version sessions are discarded and cleared on boot
+- App boot flow (async):
+  1. Load session from storage
+  2. If invalid → clear session → show onboarding placeholder
+  3. If valid → call Matrix whoami to validate access token
+     - 401 response → clear session → show onboarding placeholder
+     - Success → show app shell
+     - Network error → proceed optimistically → show app shell
 - Persists across reload; cleared on logout
-- Matrix account created via matrix-js-sdk during onboarding
+- Logout: clears localStorage session, redirects to placeholder
 
 ## Environment Variables (Frontend)
 
